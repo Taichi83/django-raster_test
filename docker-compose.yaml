@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: mdillon/postgis:9.6
+    container_name: db_test
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_tenchijin
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+  app:
+    container_name: app_test
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8080
+    volumes:
+      - .:/src
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "8082:8082"
+    depends_on:
+      - db
+#    links:
+#      - db:db
+
+volumes:
+  data:
